@@ -108,7 +108,6 @@ const RegisterUser = () => {
           console.log(err);
         });
       toast.success("User added successfully");
-      navigate("/");
     }
     if (userExists) {
       toast.warn("User already exists");

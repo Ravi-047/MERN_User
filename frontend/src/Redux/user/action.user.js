@@ -1,7 +1,7 @@
 import axios from "axios"
 import * as types from "./actionType.user"
 
-const baseUrl = "http://localhost:8080"
+const baseUrl = "https://zany-pear-mussel-tux.cyclic.app"
 
 const addUser = (payload) => async (dispatch) => {
     dispatch({ type: types.ADD_USER_REQUEST });
