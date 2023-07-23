@@ -10,6 +10,7 @@ const HomePage = () => {
   const dispatch = useDispatch();
   const userData = useSelector((store) => store.usersReducer.users.users);
 
+  const [deleteuser, setDeleteuser] = useState(false);
   const [sortField, setSortField] = useState(null);
   const [sortOrder, setSortOrder] = useState("asc");
   const [searchTerm, setSearchTerm] = useState("");
@@ -122,9 +123,11 @@ const HomePage = () => {
     if (userExist?.isAdmin) {
       dispatch(deleteUser(id, token));
       toast.success("User data deleted successfully!");
+      setDeleteuser(!deleteuser);
     } else if (userExist?._id === id) {
       dispatch(deleteUser(id, token));
       toast.success("User data deleted successfully!");
+      setDeleteuser(!deleteuser);
     } else {
       toast.error("You are not authorized to delete the user.");
       return;
@@ -169,7 +172,7 @@ const HomePage = () => {
 
   useEffect(() => {
     dispatch(getUser());
-  }, [dispatch]);
+  }, [dispatch, deleteuser]);
 
   return (
     <div className="table-container">

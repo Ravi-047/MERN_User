@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import { getUser } from "../Redux/user/action.user";
 import { loginUser } from "../Redux/authReducer/action.auth";
@@ -10,9 +10,10 @@ import "./registerUser.css";
 import "react-toastify/dist/ReactToastify.css";
 
 const Login = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const userData = useSelector((store) => store.usersReducer.users.users);
-  console.log(userData);
+
   const [isOpen, setIsOpen] = useState(false);
   const [values, setValues] = useState({
     email: "",
@@ -31,6 +32,7 @@ const Login = () => {
               toast.success("Login successful");
               localStorage.setItem("token", res.data.token);
               localStorage.setItem("username", res.data.user.username);
+              navigate("/");
             }
           })
           .catch((err) => {

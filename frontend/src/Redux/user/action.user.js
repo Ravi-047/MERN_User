@@ -27,7 +27,6 @@ const getUser = () => async (dispatch) => {
 }
 
 const updateUser = (id, token, payload) => async (dispatch) => {
-    console.log(id, token, payload);
     dispatch({ type: types.UPDATE_USER_REQUEST });
     try {
         const response = await axios.patch(`${baseUrl}/users/${id}`, payload, {
