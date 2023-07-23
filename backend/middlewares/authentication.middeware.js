@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
+const User = require("../models/user.model");
 
-const authenticateUser = (req, res, next) => {
+const authenticateUser = async (req, res, next) => {
     const token = req.headers?.token;
 
     if (!token) {
@@ -8,12 +9,24 @@ const authenticateUser = (req, res, next) => {
     }
 
     try {
-        const decodeToken = jwt.verify(token, process.env.JWT_SECRET);
-        if (decodeToken) {
+        const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+        if (decodedToken) {
+            const user = await User.findById(decodedToken.userId);
+            if (!user) {
+                return res.status(401).json({ error: 'Invalid token' });
+            }
+
+            // Setting the user object in the request for future use in route handlers
+            req.user = {
+                _id: user._id,
+                username: user.username,
+                email: user.email,
+                isAdmin: user.isAdmin
+            };
             next();
         }
         else {
-            res.status(401).json({ message: "Invaid token or token NOT FOUND" });
+            return res.status(401).json({ message: "Invaid token or token NOT FOUND" });
         }
     }
     catch (error) {
@@ -28,3 +41,6 @@ const authenticateUser = (req, res, next) => {
         }
     }
 }
+
+
+module.exports = authenticateUser;

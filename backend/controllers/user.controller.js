@@ -52,10 +52,12 @@ const getUser = async (req, res) => {
             users
         })
     } catch (error) {
-
+        res.status(500).json({ error: error.message });
     }
 }
 
+
+// Login the user 
 const loginUser = async (req, res) => {
     const { email, password } = req.body;
 
@@ -72,27 +74,69 @@ const loginUser = async (req, res) => {
         return res.status(400).json({ message: `Wrong password` })
     }
 
-    if (user.isAdmin === true) {
-        try {
-            const token = generateToken({
-                userId: user._id,
-                username: user.username,
-                email: user.email
-            })
 
-            res.status(200).json({
-                message: "Login successful",
-                isAdmin: user.isAdmin,
-                token,
-                user
-            })
-        } catch (error) {
-            res.status(500).send({ message: "Internel server error", error: `${error}` })
-        }
-    }
-    else {
-        res.status(400).json({ message: "You are not Admin" })
+    try {
+        const token = generateToken({
+            userId: user._id,
+            username: user.username,
+            email: user.email
+        })
+
+        res.status(200).json({
+            message: "Login successful",
+            isAdmin: user.isAdmin,
+            token,
+            user
+        })
+    } catch (error) {
+        res.status(500).send({ message: "Internel server error", error })
     }
 }
 
-module.exports = { createUser, getUser, loginUser };
+
+// update a user by ID
+const updateUser = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const userData = req.body;
+        const userID = req.user._id;
+
+        //find logged in user
+        const logedInUser = await User.findById(userID)
+        if (!logedInUser) {
+            return res.status(404).json({ error: "Logged-in user not found." });
+        }
+
+        // Check if the logged in user is an admin
+        if (logedInUser.isAdmin) {
+            //admin can update any user
+            // Find the user to update
+            const updateUser = await User.findByIdAndUpdate(id, userData, { new: true });
+
+            if (!updateUser) {
+                return res.status(404).json({ message: "User not found" })
+            }
+
+            return res.status(200).json({ message: "user updated successfully", user: updateUser })
+        }
+
+        // For regular users who are not admins, ensure that the logged-in user can only update their own data
+        if (id === userID) {
+            // Find the user to update
+            const updateUser = await User.findByIdAndUpdate(id, userData, { new: true });
+
+            if (!updateUser) {
+                return res.status(404).json({ message: "User not found" })
+            }
+
+            return res.status(200).json({ message: "user updated successfully", user: updateUser })
+        }
+        else {
+            return res.status(403).json({ error: 'Unauthorized' });
+        }
+    } catch (error) {
+        res.status(500).json({ error: 'Internal server error', message: error.message });
+    }
+}
+
+module.exports = { createUser, getUser, loginUser, updateUser };

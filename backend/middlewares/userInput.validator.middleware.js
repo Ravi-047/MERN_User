@@ -4,8 +4,10 @@ const User = require("../models/user.model");
 const validateUser = async (req, res, next) => {
     const { username, email, phone, password, name, age } = req.body;
 
-    if (!username || !email || !phone || !password || !name || !age) {
-        return res.status(400).json({ error: 'All fields are required' });
+    if (req.method === "POST") {
+        if (!username || !email || !phone || !password || !name || !age) {
+            return res.status(400).json({ error: 'All fields are required' });
+        }
     }
 
     // Validate email format
