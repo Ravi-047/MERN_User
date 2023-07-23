@@ -16,7 +16,8 @@ app.use(express.json());
 
 // cors origin for all browsers
 app.use(cors({
-    origin: "*"
+    origin: "*",
+    credentials: true
 }))
 
 //home route

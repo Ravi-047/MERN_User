@@ -7,7 +7,6 @@ const addUser = (payload) => async (dispatch) => {
     dispatch({ type: types.ADD_USER_REQUEST });
     try {
         const response = await axios.post(`${baseUrl}/users`, payload)
-        console.log(response.data, "this is response of add user");
         dispatch({ type: types.ADD_USER_SUCCESS, payload: response.data })
         return response
     } catch (error) {
@@ -27,10 +26,16 @@ const getUser = () => async (dispatch) => {
     }
 }
 
-const updateUser = (id, payload) => async (dispatch) => {
+const updateUser = (id, token, payload) => async (dispatch) => {
+    console.log(id, token, payload);
     dispatch({ type: types.UPDATE_USER_REQUEST });
     try {
-        const response = await axios.patch(`${baseUrl}/users/${id}`, payload);
+        const response = await axios.patch(`${baseUrl}/users/${id}`, payload, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            }
+        });
         dispatch({ type: types.UPDATE_USER_SUCCESS, payload: response.data })
         return response.status
     } catch (error) {

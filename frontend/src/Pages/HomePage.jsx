@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteUser, getUser } from "../Redux/user/action.user";
+import { deleteUser, getUser, updateUser } from "../Redux/user/action.user";
 import { FiSearch, FiChevronUp, FiChevronDown } from "react-icons/fi";
 import "./homepage.css";
 import { toast, ToastContainer } from "react-toastify";
@@ -16,6 +16,13 @@ const HomePage = () => {
   const [editUserId, setEditUserId] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
+
+  const [name, setName] = useState("");
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [age, setAge] = useState("");
+  const [state, setState] = useState("");
+  const [phone, setPhone] = useState("");
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -60,28 +67,47 @@ const HomePage = () => {
   });
 
   const handleUpdate = (id) => {
-    // Implement update functionality here
-    // You can open a modal or a form for updating the user data
+    console.log(id);
+    const data = userData?.find((user) => user._id === id);
     setEditUserId(id);
-    console.log(`Update user with ID: ${id}`);
+    setName(data.name);
+    setUsername(data.username);
+    setEmail(data.email);
+    setAge(data.age);
+    setState(data.state);
+    setPhone(data.phone);
   };
 
   const handleSave = (id) => {
-    // Find the user in the data array by ID
-    const userToUpdate = userData?.find((user) => user._id === id);
-
-    // Perform your validation here if needed
-    if (!userToUpdate.name || !userToUpdate.age || !userToUpdate.state) {
-      toast.error("Please fill all fields for updating user data.", {
-        position: toast.POSITION.TOP_RIGHT,
-      });
+    const newData = {
+      name,
+      username,
+      email,
+      age,
+      state,
+      phone,
+    };
+    const token = localStorage?.getItem("token");
+    const currentUser = localStorage?.getItem("username");
+    const userExist = userData?.find((item) => item.username === currentUser);
+    console.log(userExist);
+    if (userExist?.isAdmin) {
+      dispatch(updateUser(id, token, newData));
+      toast.success("User data updated successfully!");
+    } else if (userExist?._id === id) {
+      dispatch(updateUser(id, token, newData));
+      toast.success("User data updated successfully!");
+    } else {
+      toast.error("You are not authorized to update the user.");
       return;
     }
-
-    // Update the user data in the state or send it to your backend
-    // For demo purposes, we'll just update the state.
     setEditUserId(null);
-    toast.success("User data updated successfully!");
+    setName("");
+    setUsername("");
+    setEmail("");
+    setAge("");
+    setState("");
+    setPhone("");
   };
 
   const handleCancel = () => {
@@ -90,16 +116,16 @@ const HomePage = () => {
 
   const handleDelete = (id) => {
     const token = localStorage.getItem("token");
-    const currentUser = "ram" || localStorage.getItem("username");
+    const currentUser = localStorage.getItem("username");
     const userExist = userData?.find((item) => item.username === currentUser);
-    console.log(userExist);
+
     if (userExist?.isAdmin) {
       dispatch(deleteUser(id, token));
       toast.success("User data deleted successfully!");
     } else if (userExist?._id === id) {
       dispatch(deleteUser(id, token));
       toast.success("User data deleted successfully!");
-    } else if (!token || !userExist) {
+    } else {
       toast.error("You are not authorized to delete the user.");
       return;
     }
@@ -139,19 +165,6 @@ const HomePage = () => {
         </li>
       </ul>
     );
-  };
-
-  const handleInputChange = (id, field, value) => {
-    const updatedData = userData?.map((user) => {
-      if (user._id === id) {
-        return { ...user, [field]: value };
-      }
-      return user;
-    });
-
-    // Update the user data in the state
-    // For demo purposes, we'll just update the state.
-    // setState(updatedData);
   };
 
   useEffect(() => {
@@ -236,10 +249,8 @@ const HomePage = () => {
                 {editUserId === user._id ? (
                   <input
                     type="text"
-                    value={user.name}
-                    onChange={(e) =>
-                      handleInputChange(user._id, "name", e.target.value)
-                    }
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
                   />
                 ) : (
                   user.name
@@ -250,9 +261,7 @@ const HomePage = () => {
                   <input
                     type="text"
                     value={user.username}
-                    onChange={(e) =>
-                      handleInputChange(user._id, "username", e.target.value)
-                    }
+                    onChange={(e) => setUsername(e.target.value)}
                   />
                 ) : (
                   user.username
@@ -262,10 +271,8 @@ const HomePage = () => {
                 {editUserId === user._id ? (
                   <input
                     type="email"
-                    value={user.email}
-                    onChange={(e) =>
-                      handleInputChange(user._id, "email", e.target.value)
-                    }
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                   />
                 ) : (
                   user.email
@@ -275,10 +282,8 @@ const HomePage = () => {
                 {editUserId === user._id ? (
                   <input
                     type="number"
-                    value={user.age}
-                    onChange={(e) =>
-                      handleInputChange(user._id, "age", e.target.value)
-                    }
+                    value={age}
+                    onChange={(e) => setAge(e.target.value)}
                   />
                 ) : (
                   user.age
@@ -288,10 +293,8 @@ const HomePage = () => {
                 {editUserId === user._id ? (
                   <input
                     type="text"
-                    value={user.state}
-                    onChange={(e) =>
-                      handleInputChange(user._id, "state", e.target.value)
-                    }
+                    value={state}
+                    onChange={(e) => setState(e.target.value)}
                   />
                 ) : (
                   user.state
@@ -301,10 +304,8 @@ const HomePage = () => {
                 {editUserId === user._id ? (
                   <input
                     type="tel"
-                    value={user.phone}
-                    onChange={(e) =>
-                      handleInputChange(user._id, "phone", e.target.value)
-                    }
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
                   />
                 ) : (
                   user.phone
@@ -319,8 +320,8 @@ const HomePage = () => {
                 ) : (
                   <div className="action-buttons">
                     <button
+                      type="button"
                       onClick={() => handleUpdate(user._id)}
-                      disabled={editUserId}
                     >
                       Update
                     </button>

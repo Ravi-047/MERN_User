@@ -54,14 +54,6 @@
   z-index: -1;
 }
 
-/* Style for the active link (when you're on the corresponding page) */
-.nav-link.active {
-  background-color: #fff;
-  color: #333;
-  border-color: lightgreen;
-}
-
-/* Optional: Increase the font size for better appearance */
 .nav-link {
   font-size: 16px;
 }
