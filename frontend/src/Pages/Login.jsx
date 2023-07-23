@@ -4,13 +4,16 @@ import { Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import { getUser } from "../Redux/user/action.user";
 import { loginUser } from "../Redux/authReducer/action.auth";
+import { FiChevronUp, FiChevronDown } from "react-icons/fi";
 
+import "./registerUser.css";
 import "react-toastify/dist/ReactToastify.css";
 
 const Login = () => {
   const dispatch = useDispatch();
   const userData = useSelector((store) => store.usersReducer.users.users);
   console.log(userData);
+  const [isOpen, setIsOpen] = useState(false);
   const [values, setValues] = useState({
     email: "",
     password: "",
@@ -27,6 +30,7 @@ const Login = () => {
             if (res.status === 200) {
               toast.success("Login successful");
               localStorage.setItem("token", res.data.token);
+              localStorage.setItem("username", res.data.user.username);
             }
           })
           .catch((err) => {
@@ -76,12 +80,21 @@ const Login = () => {
       <p className="__no__account__">
         No Account, want to create{" "}
         <Link
-          //   to={`/${city}/register`}
+          to="/register"
           style={{ textDecoration: "underline", color: "blue" }}
         >
           Register here
         </Link>
       </p>
+      <div onClick={() => setIsOpen(!isOpen)} className="open_admin">
+        Admin Login <span>{isOpen ? <FiChevronUp /> : <FiChevronDown />}</span>
+      </div>
+      {isOpen && (
+        <div>
+          <p>ID - ravi@gmail.com</p>
+          <p>password - Ranjan@1234</p>
+        </div>
+      )}
     </div>
   );
 };

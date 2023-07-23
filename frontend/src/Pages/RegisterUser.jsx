@@ -1,8 +1,17 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import FormInput from "../Components/FormInput";
+import { Link, useNavigate } from "react-router-dom";
+import "./registerUser.css";
+import { addUser, getUser } from "../Redux/user/action.user";
+
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const RegisterUser = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
+  const userData = useSelector((store) => store.usersReducer.users.users);
 
   const [values, setValues] = useState({
     username: "",
@@ -19,7 +28,7 @@ const RegisterUser = () => {
       id: 1,
       name: "username",
       type: "text",
-      plaeholder: "Username",
+      placeholder: "Username",
       errorMessage:
         "Username should be 3 - 20 characters and shouldn't include any special characters",
       label: "Username",
@@ -30,7 +39,7 @@ const RegisterUser = () => {
       id: 2,
       name: "email",
       type: "email",
-      plaeholder: "Email",
+      placeholder: "Email",
       errorMessage: "It should be a valid email address",
       label: "Email",
       required: true,
@@ -39,9 +48,9 @@ const RegisterUser = () => {
       id: 3,
       name: "phone",
       type: "text",
-      plaeholder: "Enter phone number",
+      placeholder: "Enter phone number",
       errorMessage: "It should be a valid phone number",
-      pattern: "^d{10}$",
+      pattern: "[0-9]{10}",
       label: "Phone Number",
       required: true,
     },
@@ -49,7 +58,7 @@ const RegisterUser = () => {
       id: 4,
       name: "name",
       type: "text",
-      plaeholder: "Enter Your Name",
+      placeholder: "Enter Your Name",
       errorMessage: "It should be a valid Name",
       label: "Name",
       required: true,
@@ -58,7 +67,7 @@ const RegisterUser = () => {
       id: 5,
       name: "age",
       type: "number",
-      plaeholder: "minimum age 12",
+      placeholder: "minimum age 12",
       min: "12",
       errorMessage: "minimum age must be 12",
       label: "Age",
@@ -68,7 +77,7 @@ const RegisterUser = () => {
       id: 6,
       name: "password",
       type: "password",
-      plaeholder: "Password",
+      placeholder: "Password",
       errorMessage:
         "Password should be 8 - 20 characters and include atleast 1 letter, 1 number and 1 special character",
       label: "Password",
@@ -79,15 +88,71 @@ const RegisterUser = () => {
       id: 7,
       name: "state",
       type: "text",
-      plaeholder: "Enter you State",
+      placeholder: "Enter you State",
       errorMessage: "enter your state",
       label: "State",
       required: true,
     },
   ];
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const userExists = userData?.find((item) => item.email === values.email);
+
+    if (!userExists) {
+      dispatch(addUser(values))
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      toast.success("User added successfully");
+      return;
+    }
+    if (userExists) {
+      toast.warn("User already exists");
+      navigate("/login");
+      return;
+    }
+  };
+
+  useEffect(() => {
+    dispatch(getUser());
+  }, [dispatch]);
+
+  const onChange = (event) => {
+    setValues({
+      ...values,
+      [event.target.name]: event.target.value,
+    });
+  };
   return (
     <div>
-      <h1>user</h1>
+      <ToastContainer />
+      <div className="__register_form__">
+        <h2>Register</h2>
+        <form onSubmit={handleSubmit}>
+          {inputs?.map((input) => (
+            <FormInput
+              key={input.id}
+              {...input}
+              value={values[input.name]}
+              onChange={onChange}
+            />
+          ))}
+          <button>Submit</button>
+          <p style={{ textAlign: "center", marginTop: "20px" }}>
+            Have an account{" "}
+            <Link
+              to="/login"
+              style={{ textDecoration: "underline", color: "blue" }}
+            >
+              Login
+            </Link>
+          </p>
+        </form>
+      </div>
     </div>
   );
 };

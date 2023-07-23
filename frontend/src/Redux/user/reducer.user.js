@@ -28,6 +28,7 @@ const usersReducer = (state = initialState, action) => {
             return { ...state, isLoading: true, isError: false };
         }
         case types.ADD_USER_SUCCESS: {
+            console.log(payload, " this is payload");
             return { ...state, isLoading: false, isError: false, users: [...state.users, payload] };
         }
         case types.ADD_USER_FAILURE: {

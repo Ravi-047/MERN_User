@@ -7,8 +7,9 @@ const addUser = (payload) => async (dispatch) => {
     dispatch({ type: types.ADD_USER_REQUEST });
     try {
         const response = await axios.post(`${baseUrl}/users`, payload)
+        console.log(response.data, "this is response of add user");
         dispatch({ type: types.ADD_USER_SUCCESS, payload: response.data })
-        return response.status
+        return response
     } catch (error) {
         dispatch({ type: types.ADD_USER_FAILURE, payload: error })
     }
@@ -37,11 +38,17 @@ const updateUser = (id, payload) => async (dispatch) => {
     }
 }
 
-const deleteUser = (id) => async (dispatch) => {
+const deleteUser = (id, token) => async (dispatch) => {
     dispatch({ type: types.DELETE_USER_REQUEST });
     try {
-        const response = await axios.delete(`${baseUrl}/users/${id}`)
+
+        const response = await axios.delete(`${baseUrl}/users/${id}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
         dispatch({ type: types.DELETE_USER_SUCCESS, payload: id })
+
         return response.status
     } catch (error) {
         dispatch({ type: types.DELETE_USER_FAILURE, payload: error })

@@ -1,0 +1,67 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #333;
+  padding: 10px 70px;
+  color: white;
+  margin-bottom: 50px;
+  position: sticky;
+  top: 0;
+  left: 0;
+  z-index: 10;
+}
+
+.nav-title {
+  font-size: 30px;
+  font-weight: bold;
+  text-decoration: none;
+  font-family: "Bungee Spice", cursive;
+}
+
+.nav-item {
+  position: relative;
+  display: flex;
+  gap: 30px;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: #fff;
+  padding: 8px 16px;
+  border: 2px solid #fff;
+  border-radius: 5px;
+  background-color: transparent;
+  transition: all 0.3s ease;
+}
+
+.nav-link:hover {
+  background-color: #fff;
+  color: #333;
+  font-weight: bold;
+}
+
+/* style for a smooth transition on button hover */
+.nav-link::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 100%;
+  background-color: #fff;
+  transition: all 0.3s ease;
+  z-index: -1;
+}
+
+/* Style for the active link (when you're on the corresponding page) */
+.nav-link.active {
+  background-color: #fff;
+  color: #333;
+  border-color: lightgreen;
+}
+
+/* Optional: Increase the font size for better appearance */
+.nav-link {
+  font-size: 16px;
+}

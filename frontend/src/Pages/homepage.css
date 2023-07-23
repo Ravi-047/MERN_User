@@ -1,0 +1,126 @@
+/* search style  */
+.search-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.search-container input {
+  padding: 10px;
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+/* Style the search icon using CSS */
+.search-icon {
+  position: absolute;
+  right: 10px;
+  color: #666;
+}
+
+/* Add styles for the icon when hovering */
+.search-container:hover .search-icon {
+  color: #333;
+  cursor: pointer;
+}
+
+/* table style  */
+
+.table-container {
+  max-width: 90%;
+  overflow-x: auto;
+  margin: auto;
+  margin-bottom: 20px;
+}
+
+.user-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  font-size: 16px;
+}
+
+th,
+td {
+  padding: 12px;
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+}
+
+th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+  position: relative;
+  cursor: pointer;
+}
+
+tr:hover {
+  background-color: #f5f5f5;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: center;
+}
+
+.action-buttons button {
+  padding: 6px 12px;
+  margin-right: 6px;
+  cursor: pointer;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+}
+
+.action-buttons button:hover {
+  background-color: #45a049;
+}
+
+/* Styling for sorting icons */
+th .sort-icon {
+  position: absolute;
+  top: 50%;
+  right: 5px;
+  transform: translateY(-50%);
+}
+
+.sort-icon svg {
+  vertical-align: middle;
+  font-size: 0.8rem;
+}
+
+/* Styles for ascending and descending icons */
+.sort-icon.desc svg {
+  transform: rotate(180deg);
+}
+
+/* Pagination Styles */
+.pagination {
+  list-style-type: none;
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  padding: 0;
+}
+
+.pagination li {
+  margin: 0 5px;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  padding: 6px 12px;
+  border-radius: 4px;
+}
+
+.pagination li:hover {
+  background-color: #f2f2f2;
+}
+
+.pagination li.active {
+  background-color: #007bff;
+  color: #fff;
+  border: 1px solid #007bff;
+}
