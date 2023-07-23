@@ -1,4 +1,5 @@
 const User = require("../models/user.model");
+const generateToken = require("../utils/generateToken.utils");
 
 // create a new user  
 
@@ -29,7 +30,8 @@ const getUser = async (req, res) => {
             $or: [
                 { username: { $regex: search, $options: "i" } },
                 { email: { $regex: search, $options: "i" } },
-                { name: { $regex: search, $options: 'i' } }
+                { name: { $regex: search, $options: 'i' } },
+                { state: { $regex: search, $options: 'i' } }
             ]
         } : {}
 
@@ -54,4 +56,43 @@ const getUser = async (req, res) => {
     }
 }
 
-module.exports = { createUser, getUser };
+const loginUser = async (req, res) => {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+        return res.status(400).json({ message: "email and password required" })
+    }
+
+    const user = await User.findOne({ email });
+    if (!user) {
+        return res.status(404).json({ message: "User does not exits" });
+    }
+
+    if (password !== user.password) {
+        return res.status(400).json({ message: `Wrong password` })
+    }
+
+    if (user.isAdmin === true) {
+        try {
+            const token = generateToken({
+                userId: user._id,
+                username: user.username,
+                email: user.email
+            })
+
+            res.status(200).json({
+                message: "Login successful",
+                isAdmin: user.isAdmin,
+                token,
+                user
+            })
+        } catch (error) {
+            res.status(500).send({ message: "Internel server error", error: `${error}` })
+        }
+    }
+    else {
+        res.status(400).json({ message: "You are not Admin" })
+    }
+}
+
+module.exports = { createUser, getUser, loginUser };
