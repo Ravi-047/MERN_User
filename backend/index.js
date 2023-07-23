@@ -2,6 +2,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 const express = require('express');
 const cors = require('cors');
+const connectDB = require('./config/connectDB.config');
 
 // PORT
 const PORT = process.env.PORT || 8080;
@@ -24,6 +25,7 @@ app.get("/", (req, res) => {
 
 
 //listening the backend server
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
+    await connectDB();
     console.log(`server is running on http://localhost:${PORT}`);
 })

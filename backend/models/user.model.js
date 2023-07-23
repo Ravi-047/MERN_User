@@ -30,6 +30,7 @@ const userSchema = new mongoose.Schema({
     name: { type: String, required: true },
     age: { type: Number, required: true, min: 12 }, // Minimum age is set to 12
     state: { type: String },
+    isAdmin: { type: Boolean, default: false },
     createdAt: { type: Date, default: Date.now },
 });
 
