@@ -3,6 +3,7 @@ dotenv.config();
 const express = require('express');
 const cors = require('cors');
 const connectDB = require('./config/connectDB.config');
+const userRouter = require('./routes/user.router');
 
 // PORT
 const PORT = process.env.PORT || 8080;
@@ -23,6 +24,9 @@ app.get("/", (req, res) => {
     res.send("Welcme to MERN User backend")
 })
 
+
+// All Routes
+app.use("/users", userRouter)
 
 //listening the backend server
 app.listen(PORT, async () => {
