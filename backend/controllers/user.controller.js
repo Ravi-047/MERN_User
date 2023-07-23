@@ -98,6 +98,9 @@ const loginUser = async (req, res) => {
 const updateUser = async (req, res) => {
     try {
         const { id } = req.params;
+        if (!id) {
+            return res.status(400).json({ error: "User id is required." });
+        }
         const userData = req.body;
         const userID = req.user._id;
 
@@ -121,7 +124,7 @@ const updateUser = async (req, res) => {
         }
 
         // For regular users who are not admins, ensure that the logged-in user can only update their own data
-        if (id === userID) {
+        if (id === userID.toString()) {
             // Find the user to update
             const updateUser = await User.findByIdAndUpdate(id, userData, { new: true });
 
@@ -139,4 +142,50 @@ const updateUser = async (req, res) => {
     }
 }
 
-module.exports = { createUser, getUser, loginUser, updateUser };
+// Delete a User by ID,
+const deleteUser = async (req, res) => {
+    try {
+        const { id } = req.params;
+        if (!id) {
+            return res.status(400).json({ error: "User id is required." });
+        }
+
+        const userID = req.user._id;
+
+        //find logged in user
+        const logedInUser = await User.findById(userID)
+        if (!logedInUser) {
+            return res.status(404).json({ error: "Logged-in user not found." });
+        }
+
+        // Check if the logged in user is an admin
+        if (logedInUser.isAdmin) {
+            //admin can delete any user
+            // Find the user to delete
+            const deletedUser = await User.findByIdAndDelete(id);
+
+            if (!deletedUser) {
+                return res.status(404).json({ message: "User not found" })
+            }
+
+            return res.status(200).json({ message: "user Deleted successfully", user: updateUser })
+        }
+
+        // If not an admin, ensure that the logged-in user can only delete their own data
+        if (id === userID.toString()) {
+            const deletedUser = await User.findByIdAndDelete(id);
+            if (!deletedUser) {
+                return res.status(404).json({ message: "User not found" })
+            }
+
+            return res.status(200).json({ message: "user Deleted successfully", user: updateUser })
+        }
+        else {
+            return res.status(403).json({ error: 'Unauthorized' });
+        }
+    } catch (error) {
+        res.status(500).json({ error: 'Internal server error', message: error.message });
+    }
+}
+
+module.exports = { createUser, getUser, loginUser, updateUser, deleteUser };
