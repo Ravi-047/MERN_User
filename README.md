@@ -69,11 +69,15 @@ The server will start running on port 3000 by default. You can access it at <htt
 
         You can also update and delete the user if you are an authorized user.
 
+![image](https://github.com/Ravi-047/MERN_User/assets/103764080/f2805ac5-225b-4fa3-a608-1755c45e24b5)
+
 - #### Register Users
 
         Endpoint: http://localhost:3000/register
 
         Description: Display the form where users can filled the necessary details and submit the form
+
+![image](https://github.com/Ravi-047/MERN_User/assets/103764080/ce86e205-9fa8-42e7-99f0-6f8ffbfb94e3)
 
 - #### Login Users
 
@@ -81,6 +85,13 @@ The server will start running on port 3000 by default. You can access it at <htt
 
         Description: Allow the user to login with email and password.
         You can also login as Admin to use full features.
+
+![image](https://github.com/Ravi-047/MERN_User/assets/103764080/71cad7f8-673d-4195-8e88-05e8db312e49)
+
+- #### Login updating and deleting 
+  
+        Description: Allow the user to update and delete
+  ![image](https://github.com/Ravi-047/MERN_User/assets/103764080/4f66d6a1-dab7-4433-8943-ffab64db9317)
 
 ## Demo
 
@@ -101,16 +112,6 @@ The server will start running on port 3000 by default. You can access it at <htt
 
 - [DIGI USERS](#digi-users)
   - [Table of Contents](#table-of-contents)
-  - [Frontend](#frontend)
-  - [Requirements](#requirements)
-  - [Setup](#setup)
-  - [Usage](#usage)
-    - [Running the Server](#running-the-server)
-    - [API Endpoints](#api-endpoints)
-  - [Demo](#demo)
-    - [You can view a live demo of app here](#you-can-view-a-live-demo-of-app-here)
-  - [Features](#features)
-  - [Backend](#backend)
   - [Requirement](#requirement)
   - [Backend Setup](#backend-setup)
   - [Backend Usage](#backend-usage)
@@ -203,17 +204,20 @@ The server will start running on port 8080 by default. You can access it at <htt
 
         http://localhost:8080/users
 
-- #### For Login user
+- #### For Login user and updating and deleting.
 
         Endpoint: POST /users/login
-
+                  PATCH /users/:id
+                  DELETE /users/:id
         Description:-
         - Able to login user with email and password
         - Able to login as admin to user full feature.
         - To login the TOKEN is required in headers for authentication
         - Implementing JWT token authentication.
 
-        http://localhost:8080/users/login
+        http://localhost:8080/users/login 
+        http://localhost:8080/users/:id (PATCH)
+        http://localhost:8080/users/:id (DELETE)
         token is required.
 
 - #### For search, sorting, and pagination
