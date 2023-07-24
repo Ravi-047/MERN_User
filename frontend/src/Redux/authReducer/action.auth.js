@@ -4,7 +4,7 @@ import * as types from "./actionType.auth"
 const loginUser = (payload) => async (dispatch) => {
     dispatch({ type: types.LOGIN_USER_REQUEST });
     try {
-        const res = await axios.post("https://zany-pear-mussel-tux.cyclic.app/", payload);
+        const res = await axios.post("https://zany-pear-mussel-tux.cyclic.app/users/login", payload);
         dispatch({ type: types.LOGIN_USER_SUCCESS, payload: res.data });
         return res
 

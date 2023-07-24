@@ -28,7 +28,7 @@ const Login = () => {
       if (userExists?.password === values.password) {
         dispatch(loginUser(values))
           .then((res) => {
-            if (res.status === 200) {
+            if (res?.status === 200) {
               toast.success("Login successful");
               localStorage.setItem("token", res.data.token);
               localStorage.setItem("username", res.data.user.username);
